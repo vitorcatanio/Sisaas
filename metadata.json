@@ -1,0 +1,7 @@
+{
+  "name": "Disaas",
+  "description": "A comprehensive multi-tenant ERP/SaaS for distributors featuring inventory management, sales tracking, logistics, finance, and Brazilian fiscal support (NF-e).",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
