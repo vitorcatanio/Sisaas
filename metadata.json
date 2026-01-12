@@ -1,6 +1,6 @@
 {
-  "name": "Disaas",
-  "description": "A comprehensive multi-tenant ERP/SaaS for distributors featuring inventory management, sales tracking, logistics, finance, and Brazilian fiscal support (NF-e).",
+  "name": "DistribuFlow X",
+  "description": "Premium Multi-tenant ERP for modern distributors. Featuring AI-driven demand forecasting, real-time logistics, and integrated fiscal compliance (NF-e).",
   "requestFramePermissions": [
     "camera"
   ]

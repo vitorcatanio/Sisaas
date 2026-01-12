@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { HashRouter, Routes, Route, Navigate, Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -14,22 +14,21 @@ import {
   Search, 
   LogOut,
   Menu,
-  X,
-  ShieldCheck,
+  ChevronRight,
   TrendingUp,
-  AlertCircle
+  UserPlus
 } from 'lucide-react';
 
 import Dashboard from './pages/Dashboard';
 import Inventory from './pages/Inventory';
 import Sales from './pages/Sales';
+import Clients from './pages/Clients';
 import Logistics from './pages/Logistics';
 import Finance from './pages/Finance';
 import Fiscal from './pages/Fiscal';
 import SaaSAdmin from './pages/SaaSAdmin';
 import { Tenant, SubscriptionPlan } from './types';
 
-// Mock Auth & Tenant Context (Simplified for SPA)
 const MOCK_TENANT: Tenant = {
   id: 'tenant_123',
   name: 'Distribuidora Central Sul',
@@ -41,45 +40,56 @@ const MOCK_TENANT: Tenant = {
 const SidebarItem = ({ icon: Icon, label, path, active }: { icon: any, label: string, path: string, active: boolean }) => (
   <Link 
     to={path}
-    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+    className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 ${
       active 
-        ? 'bg-blue-600 text-white shadow-lg shadow-blue-200' 
-        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' 
+        : 'text-slate-500 hover:bg-white hover:text-indigo-600 hover:shadow-sm'
     }`}
   >
-    <Icon size={20} />
-    <span className="font-medium">{label}</span>
+    <div className="flex items-center gap-3">
+      <Icon size={20} strokeWidth={active ? 2.5 : 2} />
+      <span className={`font-semibold text-sm ${active ? 'tracking-wide' : ''}`}>{label}</span>
+    </div>
+    {active && <ChevronRight size={14} />}
   </Link>
 );
 
 const Navbar = ({ toggleSidebar }: { toggleSidebar: () => void }) => (
-  <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200 h-16 flex items-center justify-between px-6">
+  <header className="sticky top-0 z-40 bg-white/70 backdrop-blur-xl border-b border-slate-200/60 h-16 flex items-center justify-between px-8">
     <div className="flex items-center gap-4">
-      <button onClick={toggleSidebar} className="lg:hidden text-slate-500">
+      <button onClick={toggleSidebar} className="lg:hidden text-slate-500 hover:bg-slate-100 p-2 rounded-lg">
         <Menu size={24} />
       </button>
-      <div className="relative hidden md:block">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-        <input 
-          type="text" 
-          placeholder="Buscar produtos, pedidos..." 
-          className="pl-10 pr-4 py-2 bg-slate-100 border-none rounded-full text-sm w-64 focus:ring-2 focus:ring-blue-500 outline-none"
-        />
+      <div className="hidden md:flex items-center bg-slate-100/80 px-3 py-1.5 rounded-full border border-slate-200/50">
+        <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-tighter mr-2 bg-indigo-50 px-2 py-0.5 rounded-full">Pro</span>
+        <span className="text-xs font-semibold text-slate-600">{MOCK_TENANT.name}</span>
       </div>
     </div>
-    <div className="flex items-center gap-4">
-      <button className="relative p-2 text-slate-500 hover:bg-slate-100 rounded-full">
-        <Bell size={20} />
-        <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-      </button>
-      <div className="h-8 w-px bg-slate-200 mx-2"></div>
-      <div className="flex items-center gap-3">
-        <div className="text-right hidden sm:block">
-          <p className="text-sm font-semibold text-slate-900 leading-tight">Admin User</p>
-          <p className="text-xs text-slate-500">Gestor Pro</p>
-        </div>
-        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold border-2 border-blue-200">
-          AD
+    
+    <div className="flex items-center gap-6">
+      <div className="relative hidden sm:block">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+        <input 
+          type="text" 
+          placeholder="Comando rápido (Ctrl+K)" 
+          className="pl-9 pr-4 py-2 bg-slate-100/50 border border-transparent rounded-xl text-sm w-48 lg:w-64 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all"
+        />
+      </div>
+      
+      <div className="flex items-center gap-2">
+        <button className="relative p-2.5 text-slate-500 hover:bg-slate-100 rounded-xl transition-colors">
+          <Bell size={20} />
+          <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-indigo-500 rounded-full border-2 border-white"></span>
+        </button>
+        <div className="w-px h-6 bg-slate-200 mx-2"></div>
+        <div className="flex items-center gap-3 cursor-pointer group">
+          <div className="text-right hidden sm:block">
+            <p className="text-sm font-bold text-slate-900 leading-tight group-hover:text-indigo-600 transition-colors">Ricardo Admin</p>
+            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Gestor Master</p>
+          </div>
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold shadow-indigo-100 shadow-lg group-hover:scale-105 transition-transform">
+            RA
+          </div>
         </div>
       </div>
     </div>
@@ -91,50 +101,53 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar */}
+    <div className="flex min-h-screen bg-[#f8fafc]">
       <aside 
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-slate-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#fdfdfe] border-r border-slate-200/60 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="p-6">
-          <div className="flex items-center gap-2 mb-8">
-            <div className="bg-blue-600 p-2 rounded-xl text-white">
+        <div className="p-8 h-full flex flex-col">
+          <div className="flex items-center gap-3 mb-10">
+            <div className="bg-indigo-600 w-10 h-10 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-indigo-200">
               <TrendingUp size={24} />
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900">Distribu<span className="text-blue-600">Flow</span></h1>
+            <h1 className="text-2xl font-black tracking-tight text-slate-900">
+              Distribu<span className="text-indigo-600">Flow</span>
+            </h1>
           </div>
 
-          <nav className="space-y-1">
-            <p className="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Geral</p>
+          <nav className="flex-1 space-y-1.5 overflow-y-auto no-scrollbar">
+            <p className="px-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-3">Principais</p>
             <SidebarItem icon={LayoutDashboard} label="Dashboard" path="/" active={location.pathname === '/'} />
-            <SidebarItem icon={Package} label="Estoque" path="/inventory" active={location.pathname === '/inventory'} />
             <SidebarItem icon={ShoppingCart} label="Vendas" path="/sales" active={location.pathname === '/sales'} />
+            <SidebarItem icon={Package} label="Estoque" path="/inventory" active={location.pathname === '/inventory'} />
+            <SidebarItem icon={Users} label="Clientes" path="/clients" active={location.pathname === '/clients'} />
             
-            <p className="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-6 mb-2">Operacional</p>
+            <p className="px-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-8 mb-3">Operacional</p>
             <SidebarItem icon={Truck} label="Logística" path="/logistics" active={location.pathname === '/logistics'} />
             <SidebarItem icon={DollarSign} label="Financeiro" path="/finance" active={location.pathname === '/finance'} />
             <SidebarItem icon={FileText} label="Fiscal" path="/fiscal" active={location.pathname === '/fiscal'} />
             
-            <p className="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-6 mb-2">Gestão SaaS</p>
-            <SidebarItem icon={Settings} label="Assinatura & SaaS" path="/saas" active={location.pathname === '/saas'} />
+            <p className="px-4 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mt-8 mb-3">SaaS</p>
+            <SidebarItem icon={Settings} label="Configurações" path="/saas" active={location.pathname === '/saas'} />
           </nav>
-        </div>
-        
-        <div className="absolute bottom-0 w-full p-6 border-t border-slate-100">
-          <button className="flex items-center gap-3 w-full px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium">
-            <LogOut size={20} />
-            <span>Sair do App</span>
-          </button>
+          
+          <div className="mt-auto pt-8 border-t border-slate-100">
+            <button className="flex items-center gap-3 w-full px-4 py-3 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-all font-bold text-sm">
+              <LogOut size={20} />
+              <span>Sair da conta</span>
+            </button>
+          </div>
         </div>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 min-w-0 bg-slate-50">
+      <main className="flex-1 min-w-0 flex flex-col h-screen overflow-hidden">
         <Navbar toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} />
-        <div className="p-4 md:p-8 max-w-7xl mx-auto">
-          {children}
+        <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 scroll-smooth">
+          <div className="max-w-[1400px] mx-auto">
+            {children}
+          </div>
         </div>
       </main>
     </div>
@@ -149,6 +162,7 @@ export default function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/inventory" element={<Inventory />} />
           <Route path="/sales" element={<Sales />} />
+          <Route path="/clients" element={<Clients />} />
           <Route path="/logistics" element={<Logistics />} />
           <Route path="/finance" element={<Finance />} />
           <Route path="/fiscal" element={<Fiscal />} />
